@@ -1,0 +1,86 @@
+<% unless signed_in? %>
+  <h2>Getting started</h2>
+
+  <p>In order to test the client, you'll need to login in <code><%= site_host %></code>.</p>
+  <p>
+    You will be prompted for an username and password. Use <code>user@example.com</code> and
+    <code>doorkeeper</code> or create your own user.</p>
+
+  <p>
+    <% unless signed_in? %>
+    <a href="/sign_in" class="btn btn-success" role="button">
+      Sign in on <%= site_host %>
+    </a>
+    <% end %>
+  </p>
+<% else %>
+  <h2>Build A Row</h2>
+
+  <form>
+    <div class="form-group">
+      <label for="topic">Incoming File Name</label>
+      <input type="text" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="topic">Resulting File Name</label>
+      <input type="text" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="expire_after">
+        <input type="checkbox">
+        Store Specific
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label for="expire_after">
+        <input type="checkbox">
+        Replace Older Version
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label for="topic">Topic</label>
+      <select name="topic" class="form-control">
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="resource">Resource</label>
+      <select name="resource" class="form-control">
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="distribution_lists">Distribution Lists</label>
+      <select name="distribution_lists" class="form-control" multiple="true">
+      <% JSON.parse(access_token.get('/api/distribution_lists.json').body).each do |row| %>
+        <option value="<%= row['id'] %>"><%= row['name'] %></li></option>
+      <% end %>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="security_role">Security Role</label>
+      <select name="security_role" class="form-control">
+      <% JSON.parse(access_token.get('/api/security_roles.json').body).each do |row| %>
+        <option value="<%= row['id'] %>"><%= row['name'] %></li></option>
+      <% end %>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="expire_after">Expire After</label>
+      <select name="expire_after" class="form-control">
+        <option>Never</option>
+        <option>7 days</option>
+        <option>30 days</option>
+        <option>60 days</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Generate Row</button>
+  </form>
+<% end %>
